@@ -34,35 +34,32 @@ class UserController extends \BaseController {
 		$input = Input::JSON();
 
 		$user = new User();
-		$user->name = $input->get('name');
-		
-		if($input->get('type')) {
+
+		if ($input->get('type')) {
 			$user->type = $input->get('type');
+		} else {
+			$user->type = 'user';
 		}
+		
+		if($input->get('type') == 'bot') {
+			$user->name = $input->get('name');
+			$user->dev_id = $input->get('dev_id');
+		} else if($input->get('type') == 'guest') {
+			$user->name = 'Guest';
+			$user->save();
+			$user->name = 'Guest' . $user->id;
+		} else {
+			$user->name = $input->get('name');
+			$user->email = $input->get('email');
+			$user->password = Hash::make($input->get('password'));
+		} 
+
 		$user->save();
 
 		$rating = new UserRating();
 		$rating->user_id = $user->id;
 		$rating->level = 1;
 		$rating->save();
-
-		if($user->type === 'user') {
-			$meta = new UserMeta();
-			$meta->user_id = $user->id;
-			$meta->email = $input->get('email');
-			$meta->password = Hash::make(Config::get('auth.salt') . $input->get('password'));
-			if($input->get('age')) {
-				$meta->age = $input->get('age');
-			}
-			$meta->save();
-		} 
-
-		if($user->type === 'bot') {
-			$dev = new UserDev();
-			$dev->user_id = $user->id;
-			$dev->dev_id = $input->get('dev_id');
-			$dev->save();
-		} 
 
 		return $this->show($user->id);
 	}
@@ -75,7 +72,7 @@ class UserController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		$user = User::with('meta', 'rating', 'dev', 'dev.user')->find($id);
+		$user = User::with('rating')->find($id);
 
 		return $user;
 	}
