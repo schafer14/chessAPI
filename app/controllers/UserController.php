@@ -73,7 +73,7 @@ class UserController extends \BaseController {
 	public function show($id)
 	{
 		$user = User::with('rating')->find($id);
-
+		
 		return $user;
 	}
 

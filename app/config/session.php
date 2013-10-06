@@ -7,7 +7,7 @@ return array(
 	| Default Session Driver
 	|--------------------------------------------------------------------------
 	|
-	| This option controls the default session "driver" that will be used on
+	| This option controls the default session "driver" that will be used onpurplechess.dev
 	| requests. By default, we will use the lightweight native driver but
 	| you may specify any of the other wonderful drivers provided here.
 	|
@@ -16,7 +16,7 @@ return array(
 	|
 	*/
 
-	'driver' => 'native',
+	'driver' => 'cookie',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ return array(
 	|
 	*/
 
-	'lifetime' => 120,
+	'lifetime' => 60*24,
 
 	/*
 	|--------------------------------------------------------------------------
@@ -120,6 +120,6 @@ return array(
 	|
 	*/
 
-	'domain' => null,
+	'domain' => '.purplechess.dev',
 
 );

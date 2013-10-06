@@ -716,6 +716,25 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $port = $request->getPort();
 
         $this->assertEquals(80, $port, 'If X_FORWARDED_PROTO is set to http return 80.');
+
+        $request = Request::create('http://example.com', 'GET', array(), array(), array(), array(
+            'HTTP_X_FORWARDED_PROTO' => 'On'
+        ));
+        $port = $request->getPort();
+        $this->assertEquals(443, $port, 'With only PROTO set and value is On, getPort() defaults to 443.');
+
+        $request = Request::create('http://example.com', 'GET', array(), array(), array(), array(
+            'HTTP_X_FORWARDED_PROTO' => '1'
+        ));
+        $port = $request->getPort();
+        $this->assertEquals(443, $port, 'With only PROTO set and value is 1, getPort() defaults to 443.');
+
+        $request = Request::create('http://example.com', 'GET', array(), array(), array(), array(
+            'HTTP_X_FORWARDED_PROTO' => 'something-else'
+        ));
+        $port = $request->getPort();
+        $this->assertEquals(80, $port, 'With only PROTO set and value is not recognized, getPort() defaults to 80.');
+
         Request::setTrustedProxies(array());
     }
 
@@ -1399,6 +1418,13 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('1.1.1.1', $request->getClientIp());
         $this->assertEquals('real.example.com', $request->getHost());
         $this->assertEquals(443, $request->getPort());
+        $this->assertTrue($request->isSecure());
+
+        // check various X_FORWARDED_PROTO header values
+        $request->headers->set('X_FORWARDED_PROTO', 'ssl');
+        $this->assertTrue($request->isSecure());
+
+        $request->headers->set('X_FORWARDED_PROTO', 'https, http');
         $this->assertTrue($request->isSecure());
 
         // custom header names

@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function()
-{
-	return View::make('hello');
+Route::get('test', function() {
+	$rating = User::with('rating')->find(Auth::user()->id)->toArray()['rating'];
+	dd($rating);
 });
 
 
@@ -25,16 +25,23 @@ Route::get('/', function()
 // PUT/PATCH	/resource/{id}			update		resource.update
 // DELETE		/resource/{id}			destroy		resource.destroy
 
+Route::get('login', 'AuthController@login');
+Route::post('login', 'AuthController@auth');
+
 Route::group(array('after' => 'after'), function()
 {
+	Route::post('pusher', 'PusherController@presence');
+
 	Route::resource('user', 'UserController');
 	Route::resource('game', 'GameController');
 	Route::resource('auth', 'AuthController');
+	
 	Route::get('logout', function() {
 		Auth::logout();
 		return 'Logout';
 	});
 
+	Route::options('pusher', function() {});
 	Route::options('user', function() {});
 	Route::options('game', function() {});
 	Route::options('auth', function() {});
@@ -48,16 +55,17 @@ Route::group(array('after' => 'after'), function()
 		$origin = $headers;
 
 		$allowed_origins = array(
-			'http://purplechess.dev',
-			'http://purplechess.com'		
+			'http://www.purplechess.dev',
+			'http://www.purplechess.com'		
 		);
 
 		if (in_array($origin, $allowed_origins)) {
 
 			$response->header('Access-Control-Allow-Origin', $origin);
 			$response->header('Access-Control-Allow-Methods', '*');
-		    $response->header('Access-Control-Allow-Headers', '*, x-requested-with, Content-Type');
+		    $response->header('Access-Control-Allow-Headers', '*, x-requested-with, Content-Type, Access-Control-Expose-Headers');
 		    $response->header('Access-Control-Allow-Credentials', 'true');
+		    $response->header('Access-Control-Expose-Headers', 'Set-Cookie');
 
 
 		}

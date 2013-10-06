@@ -7,7 +7,7 @@ class AuthController extends BaseController {
 		if (Auth::check()) {
 			return Auth::user();
 		} else {
-			return 'false';
+			return Response::make('No user logged in.', 403);
 		}
 	}
 
@@ -26,7 +26,8 @@ class AuthController extends BaseController {
 				'email' => $input->get('email'), 
 				'password'=>$input->get('password')
 			);
-			if (Auth::attempt($u)) {
+			if (Auth::attempt($u, true)) {
+				Session::put('id', '23');
 				return Auth::user();
 			} else {
 				return 'false';
@@ -37,5 +38,4 @@ class AuthController extends BaseController {
 	public function show() {
 		return Response::make('Unimplemented.', 501);
 	}
-
 }
