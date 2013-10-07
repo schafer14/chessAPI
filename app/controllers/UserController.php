@@ -48,10 +48,13 @@ class UserController extends \BaseController {
 			$user->name = 'Guest';
 			$user->save();
 			$user->name = 'Guest' . $user->id;
+			Auth::loginUsingId($user->id);
 		} else {
 			$user->name = $input->get('name');
 			$user->email = $input->get('email');
 			$user->password = Hash::make($input->get('password'));
+			$user->save();
+			Auth::loginUsingId($user->id);
 		} 
 
 		$user->save();

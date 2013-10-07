@@ -25,13 +25,15 @@ Route::get('test', function() {
 // PUT/PATCH	/resource/{id}			update		resource.update
 // DELETE		/resource/{id}			destroy		resource.destroy
 
-Route::get('login', 'AuthController@login');
-Route::post('login', 'AuthController@auth');
+
+Route::get('/', function() {
+	return View::make('api');
+});
 
 Route::group(array('after' => 'after'), function()
 {
+	Route::post('pusher/prop', 'PusherController@prop');
 	Route::post('pusher', 'PusherController@presence');
-
 	Route::resource('user', 'UserController');
 	Route::resource('game', 'GameController');
 	Route::resource('auth', 'AuthController');
@@ -42,6 +44,8 @@ Route::group(array('after' => 'after'), function()
 	});
 
 	Route::options('pusher', function() {});
+	Route::options('pusher/prop', function() {});
+	Route::options('logout', function() {});
 	Route::options('user', function() {});
 	Route::options('game', function() {});
 	Route::options('auth', function() {});

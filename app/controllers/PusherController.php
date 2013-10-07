@@ -36,4 +36,19 @@ class PusherController extends BaseController {
 
 	}
 
+	public function prop() 
+	{
+		$input = Input::JSON();
+
+		
+		$pusher = new Pusher('82495e54704164d896ff', '9db69936a451cc95747d', '55591');
+		$response = $pusher->trigger('private-' . $input->get('opp'), 'prop', array( 
+			'opp' => Auth::user()->name,
+			'time' => $input->get('time'),
+			'opp_id' => Auth::user()->id
+		));
+
+		return 's';
+	}
+
 }
