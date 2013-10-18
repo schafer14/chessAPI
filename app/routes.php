@@ -12,8 +12,6 @@
 */
 
 Route::get('test', function() {
-	$rating = User::with('rating')->find(Auth::user()->id)->toArray()['rating'];
-	dd($rating);
 });
 
 
@@ -60,7 +58,8 @@ Route::group(array('after' => 'after'), function()
 
 		$allowed_origins = array(
 			'http://www.purplechess.dev',
-			'http://www.purplechess.com'		
+			'http://www.purplechess.us',
+			'http://purplechess.us'		
 		);
 
 		if (in_array($origin, $allowed_origins)) {
