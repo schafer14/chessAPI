@@ -12,9 +12,14 @@
 */
 
 Route::get('test', function() {
-	$rating = User::with('rating')->find(Auth::user()->id)->toArray()['rating'];
-	dd($rating);
+
+	if (GameUser::where('game_id', '=', '87')->where('user_id', '=', 143)->get()->toArray()) {
+	 	return 'hi';
+	}
+
+	return 'no';
 });
+
 
 
 // GET			/resource				index		resource.index
@@ -33,7 +38,10 @@ Route::get('/', function() {
 Route::group(array('after' => 'after'), function()
 {
 	Route::post('pusher/prop', 'PusherController@prop');
+	Route::put('pusher/prop', 'PusherController@accept');
 	Route::post('pusher', 'PusherController@presence');
+	Route::get('game_config/{id}', 'GameConfigController@index');
+	Route::post('game_auth/{id}', 'PusherController@game_auth');
 	Route::resource('user', 'UserController');
 	Route::resource('game', 'GameController');
 	Route::resource('auth', 'AuthController');
@@ -49,6 +57,8 @@ Route::group(array('after' => 'after'), function()
 	Route::options('user', function() {});
 	Route::options('game', function() {});
 	Route::options('auth', function() {});
+	Route::options('game_config/{id}', function() {});
+	Route::options('game_auth', function() {});
 });
 
  Route::filter('after', function($route, $request, $response)
@@ -66,7 +76,7 @@ Route::group(array('after' => 'after'), function()
 		if (in_array($origin, $allowed_origins)) {
 
 			$response->header('Access-Control-Allow-Origin', $origin);
-			$response->header('Access-Control-Allow-Methods', '*');
+			$response->header('Access-Control-Allow-Methods', '*, PUT');
 		    $response->header('Access-Control-Allow-Headers', '*, x-requested-with, Content-Type, Access-Control-Expose-Headers');
 		    $response->header('Access-Control-Allow-Credentials', 'true');
 		    $response->header('Access-Control-Expose-Headers', 'Set-Cookie');
