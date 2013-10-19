@@ -120,6 +120,6 @@ return array(
 	|
 	*/
 
-	'domain' => '.purplechess.dev',
+	'domain' => '.purplechess.us',
 
 );
