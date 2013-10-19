@@ -13,11 +13,6 @@
 
 Route::get('test', function() {
 
-	if (GameUser::where('game_id', '=', '87')->where('user_id', '=', 143)->get()->toArray()) {
-	 	return 'hi';
-	}
-
-	return 'no';
 });
 
 
@@ -70,7 +65,8 @@ Route::group(array('after' => 'after'), function()
 
 		$allowed_origins = array(
 			'http://www.purplechess.dev',
-			'http://www.purplechess.com'		
+			'http://www.purplechess.us',
+			'http://purplechess.us'		
 		);
 
 		if (in_array($origin, $allowed_origins)) {
